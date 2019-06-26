@@ -3,7 +3,7 @@ import '@glidejs/glide/dist/css/glide.core.min.css';
 import './css/style.css';
 
 /* Apps */
-import './js/src/app.js';
-import './js/src/app2.js';
+import './js/app.js';
+import './js/app2.js';
 
 
