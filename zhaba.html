@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<style>
+
+body{
+    background: #000;
+}
+canvas{
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+}
+
+</style>
+
+<script>
+
+// by twobomb
+var canvas, ctxW = 1920, ctxH = 1200,ctx;
+
+
+
+var rgb = {//Генерация цвета,плавная обработка
+	r:255, g:0,b:0,
+	toR:255,toG:0,toB:0,
+	handler:function(){
+			this.fullHandler();  
+	},
+	fullHandler:function(){
+		var props = ["r","g","b"];
+	  var propsTo = ["toR","toG","toB"];
+	  for(var i = 0; i < 3; i++)
+				if(this[props[i]] < this[propsTo[i]])
+	      	this[props[i]]++;
+	       else if(this[props[i]] > this[propsTo[i]])
+	       	this[props[i]]--;
+	  if(this.r == this.toR && this.g == this.toG && this.b == this.toB)
+	  	for(var i = 0; i < 3;i++)
+	    	this[propsTo[i]] = Math.floor(Math.random() * 255);
+
+	},
+	getColor:
+	function(){
+		return "rgb("+this.r+","+this.g+","+this.b+")";
+	}
+};
+
+
+		 var angle = 0;
+		 var step = 5;//Шаг угла
+     var stepRadius = 0.2;//Шаг увеличения радиус
+		 var radiusShapeStep = 0.1;//Шаг изменения ширины линии
+		 var minRadiusShape = 3,maxRadiusShape = 10;//Минимальная, максимальная ширина линии
+		 var radiusShape = minRadiusShape;
+		 var direction = true;
+		 var radius = 0;
+		 var x = ctxW/2,y = ctxH/2;//x,y центра эффекта
+
+	window.onload = function(){
+		canvas = document.createElement("canvas");
+		canvas.width = ctxW;
+		canvas.height = ctxH;
+		document.body.appendChild(canvas);
+		ctx = canvas.getContext("2d");
+		handler();
+	}
+	function effect(){
+		 radius = 0;
+		 ctx.beginPath();
+		 ctx.moveTo(x,y);
+		 var radian;
+		 if(direction)
+		 	radiusShape+= radiusShapeStep;
+		 else
+		 	radiusShape-= radiusShapeStep;
+		 if(radiusShape >= maxRadiusShape || radiusShape <= minRadiusShape)
+		 	direction = !direction;
+
+		 for(;radius <= ctxW/1.2; radius+= stepRadius,angle+=step){
+		 	radian = angle * Math.PI/180;		 	
+		 	ctx.lineTo(x + Math.cos(radian) * radius, y + Math.sin(radian) * radius);
+		 	//ctx.arc(x + Math.cos(radian) * radius, y + Math.sin(radian) * radius,radiusShape,0, Math.PI * 2);
+		 }
+		 ctx.moveTo(x + Math.cos(radian) * radius, y + Math.sin(radian) * radius);
+		 ctx.closePath();
+		ctx.lineWidth = radiusShape;
+	 	ctx.strokeStyle = rgb.getColor();
+	 	ctx.stroke();
+	}
+	function handler () {
+		 ctx.clearRect(0,0,ctxW,ctxH);
+		 rgb.handler();
+		 effect();
+
+
+		 setTimeout(handler,1000/60);
+	}
+
+</script>
+
+
+</body>
+</html>
